@@ -9,10 +9,14 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+import org.slf4j.LoggerFactory;
+
+import ch.qos.logback.classic.Logger;
 import entities.Student;
 
 public class Application {
 
+	private static Logger logger = (Logger) LoggerFactory.getLogger(Application.class);
 	public static void main(String[] args) {
 
 		new Thread(() -> {
@@ -137,6 +141,10 @@ public class Application {
 		System.out.println(test);
 		System.out.println(today.plusWeeks(1));
 		System.out.println(today.isBefore(today.plusDays(1)));
+
+		// ********************** LOGBACK ******************************
+
+		logger.info("LOG TEST");
 
 	}
 
