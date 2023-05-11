@@ -1,5 +1,14 @@
 package app;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
+
+import entities.Student;
+
 public class Application {
 
 	public static void main(String[] args) {
@@ -25,6 +34,88 @@ public class Application {
 		System.out.println(addQuestionMark.modify("CIAO"));
 		System.out.println(invert.modify("CIAO"));
 
+		// ************************ PREDICATES **********************
+
+		Predicate<Integer> isMoreThanTen = n -> n > 10;
+		Predicate<Integer> isLessThanTwenty = n -> n < 20;
+		Predicate<Integer> betweenTenAndTwenty = isMoreThanTen.and(isLessThanTwenty);
+
+		System.out.println(isMoreThanTen.test(20));
+		System.out.println(isMoreThanTen.test(9));
+		System.out.println(isLessThanTwenty.test(20));
+		System.out.println(isLessThanTwenty.test(9));
+
+		System.out.println(isMoreThanTen.and(isLessThanTwenty).test(15));
+		System.out.println(isMoreThanTen.and(isLessThanTwenty).test(25));
+		System.out.println(isMoreThanTen.or(isLessThanTwenty).test(26));
+		System.out.println(isMoreThanTen.negate().test(30));
+
+		// ************************* LAMBDAS *************************
+		Random rnd = new Random();
+
+		Supplier<Integer> intSupplier = () -> rnd.nextInt(1, 100);
+
+		for (int i = 0; i < 30; i++) {
+			System.out.println(intSupplier.get());
+		}
+
+		List<Integer> intList = new ArrayList<>();
+		for (int i = 0; i < 30; i++) {
+			intList.add(intSupplier.get());
+		}
+
+//		intList.forEach(n -> System.out.println(n));
+
+//		for (Integer integer : intList) {
+//			System.out.println(integer);
+//		}
+
+		// ************************* STREAMS **************************
+		System.out.println(intList);
+		List<Integer> firsTenNumbers = intList.stream().limit(10).toList();
+		Stream myStream = intList.stream().limit(10);
+		System.out.println(firsTenNumbers);
+//		myStream.forEach(i -> System.out.println(i));
+
+		List<Integer> numbersLessThanTwenty = intList.stream().filter(isLessThanTwenty).toList();
+		System.out.println(numbersLessThanTwenty);
+
+		List<Integer> numbersGreaterOrEqualThanTwenty = intList.stream().filter(isLessThanTwenty.negate()).toList();
+		System.out.println(numbersGreaterOrEqualThanTwenty);
+
+		List<Integer> numbersBetweenTenAndTwenty = intList.stream().filter(betweenTenAndTwenty).toList();
+		System.out.println(numbersBetweenTenAndTwenty);
+
+		List<Integer> doubledNumbers = intList.stream().map(num -> num * 2).toList();
+		System.out.println(doubledNumbers);
+
+		List<Student> students = new ArrayList<>();
+		students.add(new Student("Aldo", "Baglio", 20));
+		students.add(new Student("Giovanni", "Storti", 30));
+		students.add(new Student("Giacomo", "Poretti", 80));
+
+		List<Student> youngStudents = students.stream().filter(student -> student.getAge() <= 30).toList();
+		System.out.println(youngStudents);
+
+		List<Integer> ages = students.stream().map(student -> student.getAge()).toList();
+//		List<Integer> ages = students.stream().map(Student::getAge).toList();
+		System.out.println(ages);
+
+		List<Integer> youngAges = students.stream().filter(student -> student.getAge() <= 30)
+				.map(student -> student.getAge()).toList();
+		System.out.println(youngAges);
+
+		if (students.stream().anyMatch(student -> student.getFirstName().equals("Aldo"))) {
+			System.out.println("Nella lista c'è almeno un Aldo");
+		}
+
+		if (students.stream().allMatch(student -> student.getFirstName().equals("Aldo"))) {
+			System.out.println("Nella lista sono tutti Aldo");
+		}
+
+		if (students.stream().allMatch(student -> student.getAge() >= 18)) {
+			System.out.println("Nella lista sono tutti studenti maggiorenni");
+		}
 
 	}
 
