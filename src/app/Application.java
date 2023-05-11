@@ -1,5 +1,7 @@
 package app;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -116,6 +118,25 @@ public class Application {
 		if (students.stream().allMatch(student -> student.getAge() >= 18)) {
 			System.out.println("Nella lista sono tutti studenti maggiorenni");
 		}
+
+		int total = intList.stream().reduce(0, (acc, currNum) -> acc + currNum);
+		System.out.println("Totale: " + total);
+
+		int totalAges = students.stream().map(Student::getAge).reduce(0, (acc, currNum) -> acc + currNum);
+		System.out.println("Età sommate: " + totalAges);
+
+		// ************************************ LOCAL DATES ***********************
+		LocalDate today = LocalDate.now();
+		System.out.println(today);
+		LocalDate tomorrow = today.plusDays(1);
+		System.out.println(tomorrow);
+		LocalDate yesterday = today.minusDays(1);
+		System.out.println(yesterday);
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy hh:mm:ss");
+		LocalDate test = LocalDate.parse("11/05/2023 12:05:00", formatter);
+		System.out.println(test);
+		System.out.println(today.plusWeeks(1));
+		System.out.println(today.isBefore(today.plusDays(1)));
 
 	}
 
